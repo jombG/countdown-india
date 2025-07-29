@@ -253,6 +253,7 @@ body {
     visibility: visible !important;
     opacity: 1 !important;
     display: inherit !important;
+    text-align: center !important;
 }
 
 .card-content strong {
@@ -262,6 +263,7 @@ body {
 
 .card-content p {
     color: #333 !important;
+    text-align: center !important;
 }
 
 .card-content strong {
@@ -298,6 +300,7 @@ body {
     margin-bottom: 1rem;
     font-weight: 600;
     text-shadow: none;
+    text-align: center !important;
 }
 
 .description-card p {
@@ -306,6 +309,7 @@ body {
     line-height: 1.6;
     margin-bottom: 0.5rem;
     text-shadow: none;
+    text-align: center !important;
 }
 
 .description-card ul {
@@ -343,6 +347,7 @@ body {
     margin-bottom: 1rem;
     border-left: 3px solid #FF1493;
     transition: all 0.3s ease;
+    text-align: center !important;
 }
 
 
@@ -352,6 +357,7 @@ body {
     margin-bottom: 0.5rem;
     font-weight: 500;
     text-shadow: none;
+    text-align: center !important;
 }
 
 .activity-item p, .program-item p, .food-item p, .drink-item p, .warning-item p {
@@ -359,6 +365,7 @@ body {
     font-size: 0.95rem;
     margin: 0;
     text-shadow: none;
+    text-align: center !important;
 }
 
 
