@@ -751,6 +751,7 @@ body {
     font-size: 1rem !important;
     margin-bottom: 2rem !important;
     line-height: 1.6;
+    font-weight: 700 !important;
 }
 
 /* Улучшенная читаемость для карточки подтверждения */
