@@ -227,3 +227,64 @@ function initLazyLoading() {
         imageObserver.observe(img);
     });
 }
+
+// Управление фоновой музыкой
+document.addEventListener('DOMContentLoaded', function() {
+    const music = document.getElementById('background-music');
+    const musicToggle = document.getElementById('music-toggle');
+    const musicIcon = document.getElementById('music-icon');
+    
+    let isPlaying = false;
+    let hasUserInteracted = false;
+    
+    // Пытаемся запустить музыку при первом взаимодействии пользователя
+    function tryPlayMusic() {
+        if (!hasUserInteracted) {
+            hasUserInteracted = true;
+            playMusic();
+        }
+    }
+    
+    // Функция запуска музыки
+    function playMusic() {
+        music.play().then(() => {
+            isPlaying = true;
+            musicToggle.classList.add('playing');
+            musicToggle.classList.remove('muted');
+            musicIcon.textContent = '🎵';
+        }).catch((error) => {
+            console.log('Автовоспроизведение заблокировано:', error);
+            isPlaying = false;
+            musicToggle.classList.remove('playing');
+            musicToggle.classList.add('muted');
+            musicIcon.textContent = '🔇';
+        });
+    }
+    
+    // Функция остановки музыки
+    function pauseMusic() {
+        music.pause();
+        isPlaying = false;
+        musicToggle.classList.remove('playing');
+        musicToggle.classList.add('muted');
+        musicIcon.textContent = '🔇';
+    }
+    
+    // Обработчик кнопки управления музыкой
+    musicToggle.addEventListener('click', function() {
+        if (isPlaying) {
+            pauseMusic();
+        } else {
+            playMusic();
+        }
+    });
+    
+    // Слушатели для первого взаимодействия пользователя
+    document.addEventListener('click', tryPlayMusic, { once: true });
+    document.addEventListener('keydown', tryPlayMusic, { once: true });
+    document.addEventListener('scroll', tryPlayMusic, { once: true });
+    document.addEventListener('touchstart', tryPlayMusic, { once: true });
+    
+    // Установка громкости
+    music.volume = 0.3; // 30% громкости
+});

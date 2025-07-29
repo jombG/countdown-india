@@ -9,6 +9,19 @@
 
 </head>
 <body>
+    <!-- Фоновая музыка -->
+    <audio id="background-music" loop preload="auto">
+        <source src="./music/song.mp3" type="audio/mpeg">
+        Ваш браузер не поддерживает воспроизведение аудио.
+    </audio>
+
+    <!-- Кнопка управления музыкой -->
+    <div class="music-control">
+        <button id="music-toggle" class="music-btn" title="Включить/выключить музыку">
+            <span id="music-icon">🎵</span>
+        </button>
+    </div>
+
     <div class="container">
         <div class="background-animation"></div>
         
