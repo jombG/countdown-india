@@ -105,6 +105,11 @@ document.addEventListener('DOMContentLoaded', function() {
         const title = document.querySelector('.title');
         title.style.animation = 'bounce 0.8s ease';
     }, 1000);
+    
+    // Инициализируем прогрессивную загрузку изображений
+    setTimeout(() => {
+        initProgressiveLoading(); // Используем прогрессивную загрузку с красивым эффектом
+    }, 1000);
 });
 
 
@@ -131,5 +136,94 @@ function scrollToTop() {
     window.scrollTo({
         top: 0,
         behavior: 'smooth'
+    });
+}
+
+// Прогрессивная загрузка изображений
+function loadImageProgressively(img) {
+    return new Promise((resolve, reject) => {
+        // Добавляем класс загрузки
+        img.classList.add('image-loading');
+        
+        // Создаем новый объект изображения для предзагрузки
+        const imageLoader = new Image();
+        
+        imageLoader.onload = function() {
+            // Когда изображение загружено, убираем blur эффект
+            img.src = imageLoader.src;
+            img.classList.remove('image-loading');
+            img.classList.add('image-loaded');
+            resolve(img);
+        };
+        
+        imageLoader.onerror = function() {
+            console.error('Ошибка загрузки изображения:', img.dataset.src);
+            img.classList.remove('image-loading');
+            reject(new Error('Failed to load image'));
+        };
+        
+        // Начинаем загрузку изображения
+        imageLoader.src = img.dataset.src;
+    });
+}
+
+// Инициализация прогрессивной загрузки
+function initProgressiveLoading() {
+    const images = document.querySelectorAll('.mehandi-image, .activity-image');
+    
+    images.forEach((img, index) => {
+        // Создаем placeholder
+        const placeholder = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkxvYWRpbmcuLi48L3RleHQ+PC9zdmc+';
+        
+        // Сохраняем оригинальный src
+        const originalSrc = img.src;
+        img.dataset.src = originalSrc;
+        
+        // Устанавливаем placeholder
+        img.src = placeholder;
+        img.classList.add('image-loading');
+        
+        // Добавляем задержку для создания эффекта последовательной загрузки
+        setTimeout(() => {
+            loadImageProgressively(img).catch(error => {
+                console.error('Error loading image:', error);
+            });
+        }, index * 300); // Загружаем изображения с интервалом 300мс
+    });
+}
+
+// Intersection Observer для ленивой загрузки
+function initLazyLoading() {
+    const images = document.querySelectorAll('.mehandi-image, .activity-image');
+    
+    images.forEach(img => {
+        // Создаем placeholder
+        const placeholder = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjZjBmMGYwIi8+PHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkxvYWRpbmcuLi48L3RleHQ+PC9zdmc+';
+        
+        // Сохраняем оригинальный src
+        const originalSrc = img.src;
+        img.dataset.src = originalSrc;
+        
+        // Устанавливаем placeholder
+        img.src = placeholder;
+        img.classList.add('image-loading');
+    });
+    
+    const imageObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const img = entry.target;
+                loadImageProgressively(img).catch(error => {
+                    console.error('Error loading image:', error);
+                });
+                observer.unobserve(img);
+            }
+        });
+    }, {
+        rootMargin: '50px' // Начинаем загрузку за 50px до появления изображения
+    });
+
+    images.forEach(img => {
+        imageObserver.observe(img);
     });
 }
